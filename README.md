@@ -14,5 +14,7 @@ To setup
   5.2) fill in the credentials ie email,username,password
 ## to add all the tuples inside the csv into the sql-DB whichever you may choose [my preference--> PostgresSQl]
   a)  run --> python manage.py shell 
+  
   b) run all the instructions inside loaddata.py
+  
   c) it will push all the tuples into the django-admin as well as database
