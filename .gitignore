@@ -1,4 +1,4 @@
 env/
-NewCsvProjectGpu/
-requirements.txt/
-requirements2.txt/
+NewCsvProjectGpu.csv
+requirements.txt
+requirements2.txt

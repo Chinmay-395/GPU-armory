@@ -1,29 +1,28 @@
 from django.shortcuts import render
 from django.http import JsonResponse
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
-from .serializers import ProductSerializer
-from .models import Product
-# Create your views here.
-@api_view(['GET'])
-def apiOverview(request):
-    api_urls = {
-        'List': '/item-list/',
-        'Detail View': '/item-detail/<str:pk>/',
-    }
-
-    return Response(api_urls)
+from rest_framework.viewsets import ModelViewSet, mixins
+from gpuApi.serializers import ProductSerializer
+from gpuApi.models import Product
+from rest_framework.pagination import PageNumberPagination
 
 
-@api_view(['GET'])
-def itemList(request):
-    item = Product.objects.all().order_by('-id')
-    serializer = ProductSerializer(item, many=True)
-    return Response(serializer.data)
+class LargeResultsSetPagination(PageNumberPagination):
+    page_size = 10
+    page_size_query_param = 'page_size'
+    max_page_size = 10000
 
 
-@api_view(['GET'])
-def itemDetail(request, pk):
-    item = Product.objects.get(id=pk)
-    serializer = ProductSerializer(item, many=False)
-    return Response(serializer.data)
+# this works
+''' this allows the user to put,
+    patch, create and delete 
+    gpu-items which we dont need
+    therefore will try mixins
+'''
+
+
+class GpuViewset(ModelViewSet):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+    pagination_class = LargeResultsSetPagination
+    search_fields = ['name', ]
+    http_method_names = ['get', ]
